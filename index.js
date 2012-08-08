@@ -7,7 +7,9 @@
  */
 
 
-module.exports = require('./lib/index');
+var exports = module.exports = require('./lib/index');
+
+exports.tinyliquid = require('tinyliquid');
 
 /**
 示例：

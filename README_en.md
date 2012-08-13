@@ -1,6 +1,3 @@
-English user [see here](https://github.com/leizongmin/express-liquid/blob/master/README_en.md)
-===============
-
 Express-Liquid
 ==============
 
@@ -8,26 +5,26 @@ Express-Liquid
 
 
 
-安装
+Install
 ==============
 
     npm install express-liquid
 
 
 
-在Express 3.x中使用Liquid模版
+Using Liquid in Express 3.x
 =================
 
     app.set('view engine', 'liquid');
     app.engine('liquid', require('express-liquid')(options));
 
-模板语法参考这里：https://github.com/leizongmin/tinyliquid
+More about **Liquid**, see here: https://github.com/leizongmin/tinyliquid
 
 
-授权
+License
 ===============
 
-你可以在遵守**MIT Licence**的前提下随意使用并分发它。
+You can feel free to use and distribute it under the premise of compliance with the **MIT Licence**.
 
     Copyright (c) 2012 Lei Zongmin <leizongmin@gmail.com>
     http://ucdok.com

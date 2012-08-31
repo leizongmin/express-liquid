@@ -15,10 +15,31 @@ Install
 Using Liquid in Express 3.x
 =================
 
+1.Setting template engine
+
+    var options = {
+      tags:     {},     // Optional, custom template tags (reference tinyliquid)
+      filters:  {},     // Optional, custom filters (reference tinyliquid)
+      parallel: false   // Optional, parallel get data (reference tinyliquid)
+    };
     app.set('view engine', 'liquid');
     app.engine('liquid', require('express-liquid')(options));
 
 More about **Liquid**, see here: https://github.com/leizongmin/tinyliquid
+
+2.Setting layout (disable default)：
+
+    app.locals.layout = true;           // enable layout, the layout name is "layout"
+    app.locals.layout = 'other_layout'; // enable layout, the layout name is "other_layout"
+
+3.Render template
+
+    res.render('template_name', data);
+
+4.About **include** tag: {% include %}
+> The root directory is **views**, for example: {% include "abc/efg" %} will include the file "abc/edf" under the "views" directory
+
+5.Usually, you may omit template file name suffix, then it will try to add a subffix name from the configuration `view engine`
 
 
 License

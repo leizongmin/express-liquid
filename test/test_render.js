@@ -97,5 +97,25 @@ describe('render', function () {
     });
   });
 
+  it('#get cache & clear cache', function (done) {
+    var render = liquid();
+    var filename = __dirname + '/views/cache.liquid';
+    fs.writeFileSync(filename, 'ABC');
+    render(filename, utils.merge(options, {cache: true}), function (err, text) {
+      if (err) console.log(err.toString());
+      should.equal(err, null);
+      text.should.equal('ABC');
+      typeof(render.getCache(filename)).should.not.equal('undefined');
+      render.clearCache(filename);
+      fs.writeFileSync(filename, 'OOXX');
+      render(filename, utils.merge(options, {cache: true}), function (err, text) {
+        should.equal(err, null);
+        text.should.equal('OOXX');
+        fs.unlinkSync(filename);
+        done();
+      });
+    });
+  });
+
 });
 

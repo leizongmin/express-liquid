@@ -59,7 +59,8 @@ res.render('template_name', data);  // 渲染模板
 
 ```javascript
 // 初始化
-var liquid = require('express-liquid');
+var options = {};
+var liquid = require('express-liquid')(options);
 app.set('view engine', 'liquid');
 app.engine('liquid', liquid);
 

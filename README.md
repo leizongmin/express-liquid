@@ -57,7 +57,7 @@ res.render('template_name', data);  // 渲染模板
 
 在生产环境下，当express启用`view cache`时，会对编译过的模板进行缓存，这样可以避免重复编译该模板。但当文件被修改时，可以手动清除模板缓存以达到更新模板的目的。
 
-```
+```javascript
 // 初始化
 var liquid = require('express-liquid');
 app.set('view engine', 'liquid');

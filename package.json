@@ -1,8 +1,8 @@
 {
   "name":           "express-liquid",
   "main":           "./index.js",
-  "version":        "0.0.2",
-  "description":    "A liquid template engine in Express",
+  "version":        "0.0.3",
+  "description":    "A liquid template engine for Express",
   "keywords":       ["liquid", "template"],
   "author":         "Lei Zongmin <leizongmin@gmail.com>",
   "contributors": [
@@ -16,11 +16,10 @@
     "node":         ">= 0.4.0"
   },
   "dependencies":	{
-    "tinyliquid":   ">= 0.0.9"
+    "tinyliquid":   "0.2.x"
   },
   "devDependencies": {
-    "should":       "*",
-    "mocha":        ">= 1.2"
+    "mocha":        "1.8.1"
   },
   "scripts": {
     "test":         "mocha -t 5000"

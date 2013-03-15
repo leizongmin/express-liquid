@@ -76,5 +76,18 @@ describe('render', function () {
     });
   });
 
+  it('catch error', function (done) {
+    var c = newContext({timeout: 10});
+    var render = liquid();
+    c.setSyncLocals('error', function (name, callback) {
+      // do nothing
+    });
+    render('catch_error', merge(options, {context: c}), function (err, text) {
+      assert.equal(err, null);
+      console.log(text);
+      done();
+    });
+  });
+
 });
 

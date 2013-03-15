@@ -59,12 +59,12 @@ module.exports = exports = function (options) {
    *
    * @param {String} filename
    * @param {Array} ast
-   * @param {Buffer} text
+   * @param {Buffer} lines
    * @return {Object}
    * @api public
    */
-  var setCache = function (filename, ast, text) {
-    return cache[filename] = {ast: ast, text: text.split(/\n/)};
+  var setCache = function (filename, ast, lines) {
+    return cache[filename] = {ast: ast, lines: lines};
   };
 
   /**
@@ -86,7 +86,7 @@ module.exports = exports = function (options) {
    *
    * @param {String} filename
    * @param {Object} settings
-   * @param {Function} callback
+   * @param {Function} callback 格式：function (err, ast, filename, lines)
    * @api private
    */
   var compileFile = function (filename, settings, callback) {
@@ -104,7 +104,7 @@ module.exports = exports = function (options) {
       if (err) return callback(err);
       text = text.toString();
       var ast = tinyliquid.parse(text);
-      callback(null, ast, text);
+      callback(null, ast, filename, text.split(/\n/));
     });
   };
 
@@ -120,14 +120,16 @@ module.exports = exports = function (options) {
    * @param {Function} callback
    */
   var render = function (tpl, context, callback) {
+    console.log()
     tinyliquid.run(tpl.ast, context, function (err) {
       if (err) {
         var pos = context.getCurrentPosition();
-        var line1 = tpl.text[pos.line - 1];
+        var line1 = tpl.lines[pos.line - 1] || '';
         var line2 = '';
-        for (var i = 0, e = pos.column - 1; i < e; i++) line2 += ' ';
+        var lineNum = pos.line + '|    ';
+        for (var i = 0, e = lineNum.length + pos.column - 1; i < e; i++) line2 += ' ';
         line2 += '^';
-        var errors = '<p>' + line1 + '<br>' + line2 + '></p><p>' + err.toString() + '</p>';
+        var errors = '<pre>\n' + lineNum + line1 + '\n' + line2 + '\n' + err.stack + '\n</pre>';
         callback(null, errors);
       } else {
         callback(null, context.clearBuffer());
@@ -157,10 +159,10 @@ module.exports = exports = function (options) {
     if (opts.cache && tpl !== null) {
       render(tpl, context, callback);
     } else {
-      compileFile(filename, opts.settings, function (err, ast, filename, text) {
+      compileFile(filename, opts.settings, function (err, ast, filename, lines) {
         if (err) return callback(err);
-        if (opts.cache) setCache(filename, ast, text);
-        render({ast: ast, text: text}, context, callback);
+        if (opts.cache) setCache(filename, ast, lines);
+        render({ast: ast, lines: lines}, context, callback);
       });
     }
   };

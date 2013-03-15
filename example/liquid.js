@@ -3,9 +3,10 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , http = require('http')
-  , path = require('path');
+var express = require('express');
+var http = require('http');
+var path = require('path');
+var me = require('express-liquid');
 
 var app = express();
 
@@ -20,7 +21,7 @@ app.configure(function(){
   // 设置liquid模板引擎
   app.set('view engine', 'liquid');
   app.enable('view cache');
-  app.engine('liquid', require('express-liquid')());
+  app.engine('liquid', me());
   // 使用布局模板
   // app.locals.layout = 'layout.liquid';
 });
@@ -33,7 +34,9 @@ var users = [
   { name: 'jane', email: 'jane@learnboost.com' }
 ];
 app.use(function(req, res, next){
-  res.render('users', { users: users });
+  var context = new me.tinyliquid.Context();
+  context.setLocals('users', users);
+  res.render('users', {context: context});
 });
 
 

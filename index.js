@@ -3,7 +3,7 @@
 /*!
  * Express-Liquid
  *
- * @param 老雷<leizongmin@gmail.com>
+ * @param Lei Zongmin<leizongmin@gmail.com>
  */
 
 
@@ -12,20 +12,21 @@ var fs = require('fs');
 var path = require('path');
 
 /**
- * 返回用于express 3.x的渲染函数
+ * TinyLiquid engine for the Express 3.x
  * 
  * options
- *   includeFile: 读取文件的函数，格式 function (filename, callback)
- *                                callback格式： callback(err, content)
- *   context: 基本的Context对象
+ *   includeFile: read file handler, format: function (filename, callback)
+ *                          callback format: callback(err, content)
+ *   context: base context object
  *
- * 模板：
- *    {% include "filename" %} 其中的filename默认为views目录下绝对路径，与当前模板文件所在路径无关 
- *                             filename若省略扩展名，则默认加上 'view engine' 作为扩展名，或者为 .liquid
+ * Notes:
+ *    {% include "filename" %} the "filename" default to under the "views" path
  *
- * 布局layout：
- *    指定locals变量layout为布局模板，如：  res.locals.layout = 'layout.liquid';
- *    在布局模板中通过 {{body}} 或 {{content_for_layout}} 来获取当前模板的内容
+ * Layout:
+ *    Not support layout, please use the "include" tag. Example:
+ *    {% include "header" %}
+ *    This is the body.
+ *    {% include "footer" %}
  *
  * @param {Object} options
  * @return {Function}
@@ -38,7 +39,7 @@ module.exports = exports = function (options) {
   var cache = {};
 
   /**
-   * 取缓存
+   * Get cache
    *
    * @param {String} filename
    * @return {Function}
@@ -55,7 +56,7 @@ module.exports = exports = function (options) {
   };
 
   /**
-   * 设置缓存
+   * Set cache
    *
    * @param {String} filename
    * @param {Array} ast
@@ -68,7 +69,7 @@ module.exports = exports = function (options) {
   };
 
   /**
-   * 删除缓存
+   * Clear cache
    *
    * @param {String} filename
    * @return {Function}
@@ -82,11 +83,11 @@ module.exports = exports = function (options) {
   };
 
   /**
-   * 编译模板
+   * Compile template file
    *
    * @param {String} filename
    * @param {Object} settings
-   * @param {Function} callback 格式：function (err, ast, filename, lines)
+   * @param {Function} callback format: function (err, ast, filename, lines)
    * @api private
    */
   var compileFile = function (filename, settings, callback) {
@@ -113,14 +114,13 @@ module.exports = exports = function (options) {
   });
 
   /**
-   * 渲染模板
+   * Render template
    *
    * @param {Object} tpl
    * @param {Object} context
    * @param {Function} callback
    */
   var render = function (tpl, context, callback) {
-    console.log()
     tinyliquid.run(tpl.ast, context, function (err) {
       if (err) {
         var pos = context.getCurrentPosition();
@@ -138,13 +138,13 @@ module.exports = exports = function (options) {
   };
 
   /**
-   * 用于express的接口
+   * Return the engine
    *
    * @param {String} filename
    * @param {Object} opts
-   *   - {Object} settings  express配置
-   *   - {Boolean} cache    是否缓存
-   *   - {Object} context   tinyliquid用的Context对象 
+   *   - {Object} settings
+   *   - {Boolean} cache
+   *   - {Object} context  the tinyliquid.Context instance
    * @param {Function} callback
    * @api public
    */
@@ -168,11 +168,11 @@ module.exports = exports = function (options) {
   };
 
 
-  // 缓存操作
+  // Cache operation
   ret.cache = cache;
   ret.getCache = getCache;
   ret.clearCache = clearCache;
-  // tinyliquid对象
+  // The tinyliquid
   ret.tinyliquid = ret.tinyliquid;
 
   return ret;

@@ -17,7 +17,8 @@ var path = require('path');
  * options
  *   includeFile: read file handler, format: function (filename, callback)
  *                          callback format: callback(err, content)
- *   context: base context object
+ *   context:     base context object
+ *   customTags:  custom tags parser
  *
  * Notes:
  *    {% include "filename" %} the "filename" default to under the "views" path
@@ -36,6 +37,7 @@ module.exports = exports = function (options) {
   options = options || {};
   var baseContext = options.context || new tinyliquid.Context();
   var includeFile = options.includeFile;
+  var customTags = options.customTags || {};
   var cache = {};
 
   /**
@@ -104,7 +106,7 @@ module.exports = exports = function (options) {
     readFile(filename, function (err, text) {
       if (err) return callback(err);
       text = text.toString();
-      var ast = tinyliquid.parse(text);
+      var ast = tinyliquid.parse(text, {customTags: customTags});
       callback(null, ast, filename, text.split(/\n/));
     });
   };
@@ -172,10 +174,12 @@ module.exports = exports = function (options) {
   ret.cache = cache;
   ret.getCache = getCache;
   ret.clearCache = clearCache;
-  // The tinyliquid
-  ret.tinyliquid = ret.tinyliquid;
 
   return ret;
 };
 
+// The tinyliquid
 exports.tinyliquid = tinyliquid;
+
+// Create a new context
+exports.newContext = tinyliquid.newContext;

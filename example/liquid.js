@@ -18,12 +18,9 @@ app.configure(function(){
   //app.use(express.bodyParser());
   //app.use(express.methodOverride());
   //app.use(app.router);
-  // 设置liquid模板引擎
   app.set('view engine', 'liquid');
   app.enable('view cache');
   app.engine('liquid', me());
-  // 使用布局模板
-  // app.locals.layout = 'layout.liquid';
 });
 
 

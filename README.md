@@ -1,86 +1,56 @@
-English user [see here](https://github.com/leizongmin/express-liquid/blob/master/README_en.md)
-===============
-
-Express-Liquid
+Express-Liquid [![Build Status](https://secure.travis-ci.org/leizongmin/express-liquid.png?branch=master)](http://travis-ci.org/leizongmin/express-liquid) [![Dependencies Status](https://david-dm.org/leizongmin/express-liquid.png)](http://david-dm.org/leizongmin/express-liquid)
 ==============
 
-[![Build Status](https://secure.travis-ci.org/leizongmin/express-liquid.png?branch=master)](http://travis-ci.org/leizongmin/express-liquid)
+
+Install
+=======
+
+```bash
+npm install express-liquid
+```
 
 
+Using TinyLiquid in Express 3.x
+===============================
 
-安装
-==============
-
-    npm install express-liquid
-
-
-
-在Express 3.x中使用Liquid模版
-=================
-
-1.设置模板引擎：
+1.Setting template engine
 
 ```javascript
+var expressLiquid = require('express-liquid');
 var options = {
-  tags:     {},     // 可选，自定义模板标记（详细用法参考tinyliquid）
-  filters:  {},     // 可选，自定义模板内使用的函数（详细用法参考tinyliquid）
-  parallel: false   // 可选，是否并行获取数据（详细用法参考tinyliquid）
+  // read file handler, optional
+  includeFile: function (filename, callback) {
+    fs.readFile(filename, 'utf8', callback);
+  }
+  // the base context, optional
+  context: expressLiquid.newContext(),
+  // custom tags parser, optional
+  customTags: {}
 };
 app.set('view engine', 'liquid');
-app.engine('liquid', require('express-liquid')(options));
+app.engine('liquid', expressLiquid(options));
 ```
 
-模板语法参考这里：https://github.com/leizongmin/tinyliquid
+More about **TinyLiquid**, see https://github.com/leizongmin/tinyliquid
 
-2.设置布局模板（默认不启用）：
+2.Render template
 
 ```javascript
-app.locals.layout = true;           // 启用布局模板，布局模板名为layout
-app.locals.layout = 'other_layout'; // 自定义布局模板文件名
+res.render('template_name', {context: context});
 ```
 
-3.渲染模板
+3.About **include** tag: {% include %}
+> The root directory is **views**, for example: {% include "abc/efg" %} will include the file "abc/edf" under the "views" directory
 
-```javascript
-res.render('template_name', data);  // 渲染模板
-```
-
-4.模板中的包含文件标记：{% include %}
-> 所有的文件均从express的views目录查找，与当前文件所在位置无关。如：{% include "abc/efg" %} 为包含views目录下的abc/efg文件
-
-5.一般情况下，你可以省略模板文件的后缀名，此时程序会尝试加上`view engine`中设置的后缀名并查找相应的模板文件。
+4.Usually, you may omit template file name suffix, then it will try to add a subffix name from the configuration `view engine`
 
 
+License
+=======
 
-模板缓存
-===============
+You can feel free to use and distribute it under the premise of compliance with the **MIT Licence**.
 
-在生产环境下，当express启用`view cache`时，会对编译过的模板进行缓存，这样可以避免重复编译该模板。但当文件被修改时，可以手动清除模板缓存以达到更新模板的目的。
-
-```javascript
-// 初始化
-var options = {};
-var liquid = require('express-liquid')(options);
-app.set('view engine', 'liquid');
-app.engine('liquid', liquid);
-
-// ...
-
-// 当文件修改时，清理缓存
-for (var filename in liquid.cache) {
-  // 删除相应文件的缓存，filename为文件的绝对路径
-  delete liquid.cache[filename];
-}
-```
-
-
-
-授权
-===============
-
-你可以在遵守**MIT Licence**的前提下随意使用并分发它。
-
-    Copyright (c) 2012 Lei Zongmin <leizongmin@gmail.com>
+    Copyright (c) 2012-2013 Lei Zongmin <leizongmin@gmail.com>
     http://ucdok.com
     
     The MIT License

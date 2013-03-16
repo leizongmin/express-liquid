@@ -17,7 +17,6 @@ app.configure(function(){
   //app.use(express.bodyParser());
   //app.use(express.methodOverride());
   //app.use(app.router);
-  // 设置liquid模板引擎
   app.set('view engine', 'ejs');
   app.enable('view cache');
 });

@@ -21,8 +21,6 @@ app.configure(function(){
   app.enable('view cache');
 });
 
-
-// 测试
 var users = [
   { name: 'tobi', email: 'tobi@learnboost.com' },
   { name: 'loki', email: 'loki@learnboost.com' },

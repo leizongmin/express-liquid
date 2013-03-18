@@ -24,7 +24,6 @@ app.configure(function(){
 });
 
 
-// 测试
 var users = [
   { name: 'tobi', email: 'tobi@learnboost.com' },
   { name: 'loki', email: 'loki@learnboost.com' },

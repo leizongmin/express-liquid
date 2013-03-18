@@ -1,0 +1,19 @@
+<div style="
+  font-size: 14px;
+  width: 80%;
+  margin: 60px auto;
+  border: 2px solid #CCC;
+  padding: 6px 12px;
+  min-width:500px;
+  color: #333;
+  line-height: 1.6;
+  font-family: 'Helvetica Neue', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, sans-serif !important;
+  background: #f8f8f8;
+  background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#eaeaea));
+">
+  <div style="margin-bottom: 50px;">{% for line in lines %}
+    <span style="display:inline-block; width:100%; {% if line.highlight %}background-color:rgb(253, 194, 194); font-weight: bold;{% endif %}">{{line.text | escape | replace: ' ', '&nbsp;'}}</span>
+  {% endfor %}</div>
+  <h1 style="magrin: 0;">{{error | escape}}</h1>
+  <pre style="color: #333; font-family: 'Helvetica Neue', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, sans-serif !important;">{{stack | escape}}</pre>
+</div>

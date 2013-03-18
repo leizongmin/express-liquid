@@ -71,7 +71,7 @@ describe('render', function () {
     });
     render('include', merge(options), function (err, text) {
       assert.equal(err, null);
-      assert.equal(text, 'This is file1.\r\nThis is file2.\r\nThis is file3.\r\nThis is file4.\r\nEND.');
+      assert.deepEqual(text.split(/\r?\n/), 'This is file1.\r\nThis is file2.\r\nThis is file3.\r\nThis is file4.\r\nEND.'.split(/\r?\n/));
       done();
     });
   });

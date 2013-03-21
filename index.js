@@ -39,8 +39,6 @@ var path = require('path');
 module.exports = exports = function (options) {
   options = options || {};
   var baseContext = options.context || new tinyliquid.Context();
-  var includeFile = options.includeFile;
-  var customResolveFilename = options.resolveFilename;
   var customTags = options.customTags || {};
   var cache = {};
 
@@ -106,7 +104,7 @@ module.exports = exports = function (options) {
       return name;
     }
   };
-  if (typeof(customResolveFilename) === 'function') resolveFilename = customResolveFilename;
+  if (typeof(options.resolveFilename) === 'function') resolveFilename = options.resolveFilename;
 
   /**
    * Read file
@@ -127,7 +125,7 @@ module.exports = exports = function (options) {
       callback(err, data);
     });
   };
-  if (typeof(includeFile) === 'function') readFile = includeFile;
+  if (typeof(options.includeFile) === 'function') readFile = options.includeFile;
 
 
   /**

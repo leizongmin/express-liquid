@@ -146,13 +146,15 @@ module.exports = exports = function (options) {
     // read file and parse
     readFile(filename, function (err, text) {
       if (err) return callback(err);
+
       text = text.toString();
       var ast = tinyliquid.parse(text, {customTags: customTags});
       var lines = text.split(/\n/);
-      callback(null, ast, filename, lines);
 
       // save cache
       if (enableCache) setCache(filename, ast, lines);
+
+      callback(null, ast, filename, lines);
     }, enableCache);
   };
 

@@ -5,6 +5,7 @@
 var assert = require('assert');
 var liquid = require('../');
 var fs = require('fs');
+var path = require('path');
 
 var merge = function () {
   var ret = {};
@@ -84,8 +85,32 @@ describe('render', function () {
     });
     render('catch_error', merge(options, {context: c}), function (err, text) {
       assert.equal(err, null);
-      console.log(text);
       done();
+    });
+  });
+
+  it('cache', function (done) {
+    var c = newContext({timeout: 10});
+    var render = liquid();
+    var name = 'watch.liquid';
+    var filename = path.resolve(options.settings.views, name);
+    fs.writeFileSync(filename, 'new file');
+    var opts = merge(options, {cache: true, context: c});
+    render(name, opts, function (err, text) {
+      assert.equal(err, null);
+      assert.equal(text, 'new file');
+      assert.ok(render.cache[filename]);
+      
+      fs.writeFileSync(filename, 'file has changed');
+      c.clearBuffer();
+      setTimeout(function () {
+        render(name, opts, function (err, text) {
+          assert.equal(err, null);
+          assert.equal(text, 'file has changed');
+          fs.unlinkSync(filename);
+          done();
+        });
+      }, 1000);
     });
   });
 

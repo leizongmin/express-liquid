@@ -16,7 +16,7 @@ var path = require('path');
  * TinyLiquid engine for the Express 3.x
  * 
  * options
- *   includeFile: read file handler, format: function (filename, callback)
+ *   includeFile: read file handler, format: function (filename, callback, enableCache)
  *                          callback format: callback(err, content)
  *   resolveFilename:  resolve the absolute file name, format: function (name, settings),
                                                        return: absolute file name
@@ -40,7 +40,7 @@ module.exports = exports = function (options) {
   options = options || {};
   var baseContext = options.context || new tinyliquid.Context();
   var includeFile = options.includeFile;
-  var _resolveFilename = options.resolveFilename;
+  var customResolveFilename = options.resolveFilename;
   var customTags = options.customTags || {};
   var cache = {};
 
@@ -74,7 +74,8 @@ module.exports = exports = function (options) {
    * @api public
    */
   var setCache = function (filename, ast, lines) {
-    return cache[filename] = {ast: ast, lines: lines};
+    var ret = cache[filename] = {ast: ast, lines: lines};
+    return ret;
   };
 
   /**
@@ -108,7 +109,29 @@ module.exports = exports = function (options) {
       return name;
     }
   };
-  if (typeof(_resolveFilename) === 'function') resolveFilename = _resolveFilename;
+  if (typeof(customResolveFilename) === 'function') resolveFilename = customResolveFilename;
+
+  /**
+   * Read file
+   *
+   * @param {String} filename
+   * @param {Function} callback
+   * @param {Boolean} enableCache
+   */
+  var readFile = function (filename, callback, enableCache) {
+    fs.readFile(filename, function (err, data) {
+      // watch file, if the file has changed, clear the cache
+      if (enableCache && !err) {
+        var w = fs.watch(filename, function (event) {
+          clearCache(filename);
+          w.close();
+        });
+      }
+      callback(err, data);
+    });
+  };
+  if (typeof(includeFile) === 'function') readFile = includeFile;
+
 
   /**
    * Compile template file
@@ -119,18 +142,12 @@ module.exports = exports = function (options) {
    * @api private
    */
   var compileFile = function (filename, settings, callback) {
+    var enableCache = !!settings.__express_liquid_cache;
+
     // check cache
     var tpl = getCache(filename);
-    if (settings.__express_liquid_cache && tpl !== null) return callback(null, tpl.ast, filename, tpl.lines);
-
-    if (typeof(includeFile) !== 'function') {
-      var readFile = function (filename, callback) {
-        fs.readFile(filename, callback);
-      };
-    } else {
-      var readFile = includeFile;
-    }
-
+    if (enableCache && tpl !== null) return callback(null, tpl.ast, filename, tpl.lines);
+    
     // read file and parse
     readFile(filename, function (err, text) {
       if (err) return callback(err);
@@ -140,8 +157,8 @@ module.exports = exports = function (options) {
       callback(null, ast, filename, lines);
 
       // save cache
-      if (settings.__express_liquid_cache) setCache(filename, ast, lines);
-    });
+      if (enableCache) setCache(filename, ast, lines);
+    }, enableCache);
   };
 
   baseContext.onInclude(function (filename, callback) {
@@ -209,13 +226,13 @@ module.exports = exports = function (options) {
    * @api public
    */
   var ret = function (filename, opts, callback) {
-    if (opts.layout === true) opts.layout = 'layout';
-
+    // init context
     var context = opts.context || new tinyliquid.Context();
     context.from(baseContext);
     context._express_settings = opts.settings;
     if (opts.cache) opts.settings.__express_liquid_cache = true;
 
+    // compile file and render
     filename = resolveFilename(filename, opts.settings);
     compileFile(filename, opts.settings, function (err, ast, filename, lines) {
       if (err) return callback(err);

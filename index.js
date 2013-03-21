@@ -44,9 +44,6 @@ module.exports = exports = function (options) {
   var customTags = options.customTags || {};
   var cache = {};
 
-  // Friendly error page render
-  var renderErrorPage = tinyliquid.compile(fs.readFileSync(path.resolve(__dirname, 'error_page.liquid'), 'utf8'));
-
   /**
    * Get cache
    *
@@ -147,7 +144,7 @@ module.exports = exports = function (options) {
     // check cache
     var tpl = getCache(filename);
     if (enableCache && tpl !== null) return callback(null, tpl.ast, filename, tpl.lines);
-    
+
     // read file and parse
     readFile(filename, function (err, text) {
       if (err) return callback(err);
@@ -176,42 +173,55 @@ module.exports = exports = function (options) {
   var render = function (tpl, context, callback) {
     tinyliquid.run(tpl.ast, context, function (err) {
       if (err) {
-        // show friendly error information
-        var pos = context.getCurrentPosition();
-        var lines = [];
-        var length = tpl.lines.length;
-        var showCodeLine = function (line, highlight) {
-          var index = line - 1;
-          if (index >= 0 && index < length) {
-            var lineNum = line + '|    ';
-            var text = lineNum + tpl.lines[index].trimRight();
-            lines.push({text: text, highlight: highlight});
-            return lineNum.length;
-          } else {
-            return 0;
-          }
-        };
-        showCodeLine(pos.line - 3);
-        showCodeLine(pos.line - 2);
-        showCodeLine(pos.line - 1);
-        var prefixLength = showCodeLine(pos.line, true);
-        var marks = '';
-        for (var i = 0, e = prefixLength + pos.column - 1; i < e; i++) marks += ' ';
-        marks += '^';
-        lines.push({text: marks, highlight: true});
-        showCodeLine(pos.line + 1);
-        showCodeLine(pos.line + 2);
-        showCodeLine(pos.line + 3);
-        var c = tinyliquid.newContext();
-        var stack = err.stack.split(/\n/);
-        c.setLocals('lines', lines);
-        c.setLocals('error', stack[0]);
-        c.setLocals('stack', stack.slice(1).join('\n'));
-        renderErrorPage(c, callback);
+        renderErrorPage(tpl, context, callback);
       } else {
         callback(null, context.clearBuffer());
       }
     });
+  };
+
+  // Friendly error page render
+  var errorPageRender = tinyliquid.compile(fs.readFileSync(path.resolve(__dirname, 'error_page.liquid'), 'utf8'));
+
+  /**
+   * Render friendly error page
+   *
+   * @param {Object} tpl
+   * @param {Object} context
+   * @param {Function} callback
+   */
+  var renderErrorPage = function (tpl, context, callback) {
+    var pos = context.getCurrentPosition();
+    var lines = [];
+    var length = tpl.lines.length;
+    var showCodeLine = function (line, highlight) {
+      var index = line - 1;
+      if (index >= 0 && index < length) {
+        var lineNum = line + '|    ';
+        var text = lineNum + tpl.lines[index].trimRight();
+        lines.push({text: text, highlight: highlight});
+        return lineNum.length;
+      } else {
+        return 0;
+      }
+    };
+    showCodeLine(pos.line - 3);
+    showCodeLine(pos.line - 2);
+    showCodeLine(pos.line - 1);
+    var prefixLength = showCodeLine(pos.line, true);
+    var marks = '';
+    for (var i = 0, e = prefixLength + pos.column - 1; i < e; i++) marks += ' ';
+    marks += '^';
+    lines.push({text: marks, highlight: true});
+    showCodeLine(pos.line + 1);
+    showCodeLine(pos.line + 2);
+    showCodeLine(pos.line + 3);
+    var c = tinyliquid.newContext();
+    var stack = err.stack.split(/\n/);
+    c.setLocals('lines', lines);
+    c.setLocals('error', stack[0]);
+    c.setLocals('stack', stack.slice(1).join('\n'));
+    errorPageRender(c, callback);
   };
 
   /**

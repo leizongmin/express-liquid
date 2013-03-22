@@ -173,7 +173,7 @@ module.exports = exports = function (options) {
   var render = function (tpl, context, callback) {
     tinyliquid.run(tpl.ast, context, function (err) {
       if (err) {
-        renderErrorPage(tpl, context, callback);
+        renderErrorPage(err, tpl, context, callback);
       } else {
         callback(null, context.clearBuffer());
       }
@@ -186,11 +186,12 @@ module.exports = exports = function (options) {
   /**
    * Render friendly error page
    *
+   * @param {Object} err
    * @param {Object} tpl
    * @param {Object} context
    * @param {Function} callback
    */
-  var renderErrorPage = function (tpl, context, callback) {
+  var renderErrorPage = function (err, tpl, context, callback) {
     var pos = context.getCurrentPosition();
     var lines = [];
     var length = tpl.lines.length;
@@ -217,7 +218,7 @@ module.exports = exports = function (options) {
     showCodeLine(pos.line + 2);
     showCodeLine(pos.line + 3);
     var c = tinyliquid.newContext();
-    var stack = err.stack.split(/\n/);
+    var stack = err instanceof Error ? err.stack.split(/\n/) : [err];
     c.setLocals('lines', lines);
     c.setLocals('error', stack[0]);
     c.setLocals('stack', stack.slice(1).join('\n'));

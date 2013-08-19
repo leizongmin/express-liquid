@@ -40,10 +40,15 @@ res.render('template_name', {context: context});
 ```
 
 3.About **include** tag: {% include %}
-> The root directory is **views**, for example: {% include "abc/efg" %} will include the file "abc/edf" under the "views" directory
-> If your want to use a relative file path, please add the "./" or "../" prefix. For example:
-> {% include "./path/to" %}
-> {% include "../path/to" %}
+
+The root directory is **views**, for example: {% include "abc/efg" %} will include the file "abc/edf" under the "views" directory
+
+If your want to use a relative file path, please add the "./" or "../" prefix. For example:
+
+```
+{% include "./path/to" %}
+{% include "../path/to" %}
+```
 
 4.Usually, you may omit template file name suffix, then it will try to add a subffix name from the configuration `view engine`
 

@@ -154,12 +154,24 @@ module.exports = exports = function (options) {
       // save cache
       if (enableCache) setCache(filename, ast, lines);
 
+      // current filename
+      ast = tinyliquid.insertFilename(ast, filename);
+
       callback(null, ast, filename, lines);
     }, enableCache);
   };
 
+  // onclude handler
   baseContext.onInclude(function (filename, callback) {
-    filename = resolveFilename(filename, this._express_settings);
+    var parentFilename = this.getFilename();
+
+    // if the filename is start with "./" or "../", it means this is a relative file path
+    if (parentFilename && (filename.substr(0, 2) === './' || filename.substr(0, 3) === '../')) {
+      filename = resolveFilename(path.join(parentFilename, '../' + filename), this._express_settings);
+    } else {
+      filename = resolveFilename(filename, this._express_settings);
+    }
+
     compileFile(filename, this._express_settings, callback);
   });
 

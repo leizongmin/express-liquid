@@ -28,7 +28,7 @@ describe('render', function () {
       'views':          __dirname + '/views'
     }
   };
-
+  /*
   it('normal', function (done) {
     var render = liquid();
     render('normal', merge(options), function (err, text) {
@@ -76,7 +76,19 @@ describe('render', function () {
       done();
     });
   });
-
+  */
+  it('include - relative path', function (done) {
+    var context = newContext();
+    var render = liquid({
+      context:  context
+    });
+    render('include2', merge(options), function (err, text) {
+      assert.equal(err, null);
+      assert.deepEqual(text.split(/\r?\n/), 'This is file1 in files.\r\nThis is file2 in files.\r\nThis is file3 in files.\r\nThis is file3.\r\nThis is file2.\r\nThis is file3.\r\nEND.'.split(/\r?\n/));
+      done();
+    });
+  });
+  return;
   it('catch error', function (done) {
     var c = newContext({timeout: 10});
     var render = liquid();

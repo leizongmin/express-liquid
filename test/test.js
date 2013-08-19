@@ -28,7 +28,7 @@ describe('render', function () {
       'views':          __dirname + '/views'
     }
   };
-  /*
+  
   it('normal', function (done) {
     var render = liquid();
     render('normal', merge(options), function (err, text) {
@@ -76,7 +76,7 @@ describe('render', function () {
       done();
     });
   });
-  */
+  
   it('include - relative path', function (done) {
     var context = newContext();
     var render = liquid({
@@ -88,7 +88,7 @@ describe('render', function () {
       done();
     });
   });
-  return;
+  
   it('catch error', function (done) {
     var c = newContext({timeout: 10});
     var render = liquid();

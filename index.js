@@ -50,7 +50,7 @@ module.exports = exports = function (options) {
    * @api public
    */
   var getCache = function (filename) {
-    filename = path.resolve(filename);
+    filename = resolveFilename(filename);
     var ast = cache[filename];
     if (typeof(ast) !== 'undefined') {
       return ast;
@@ -81,7 +81,7 @@ module.exports = exports = function (options) {
    * @api public
    */
   var clearCache = function (filename) {
-    filename = path.resolve(filename);
+    filename = resolveFilename(filename);
     var fn = cache[filename];
     delete cache[filename];
     return fn;

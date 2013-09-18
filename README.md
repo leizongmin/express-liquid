@@ -21,7 +21,7 @@ var options = {
   // read file handler, optional
   includeFile: function (filename, callback) {
     fs.readFile(filename, 'utf8', callback);
-  }
+  },
   // the base context, optional
   context: expressLiquid.newContext(),
   // custom tags parser, optional

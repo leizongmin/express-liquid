@@ -20,7 +20,7 @@ app.configure(function(){
   //app.use(app.router);
   app.set('view engine', 'liquid');
   app.enable('view cache');
-  app.engine('liquid', me());
+  app.engine('liquid', me({traceError: true}));
 });
 
 

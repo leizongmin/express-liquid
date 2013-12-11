@@ -26,7 +26,9 @@ var options = {
   // the base context, optional
   context: expressLiquid.newContext(),
   // custom tags parser, optional
-  customTags: {}
+  customTags: {},
+  // if an error occurred while rendering, show detail or not, default to false
+  traceError: false
 };
 app.set('view engine', 'liquid');
 app.engine('liquid', expressLiquid(options));
@@ -65,11 +67,11 @@ License
 
 You can feel free to use and distribute it under the premise of compliance with the **MIT Licence**.
 
-    Copyright (c) 2012-2013 Lei Zongmin <leizongmin@gmail.com>
+    Copyright (c) 2012-2013 Zongmin Lei <leizongmin@gmail.com>
     http://ucdok.com
-    
+
     The MIT License
-    
+
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
     "Software"), to deal in the Software without restriction, including
@@ -77,10 +79,10 @@ You can feel free to use and distribute it under the premise of compliance with 
     distribute, sublicense, and/or sell copies of the Software, and to
     permit persons to whom the Software is furnished to do so, subject to
     the following conditions:
-    
+
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
-    
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND

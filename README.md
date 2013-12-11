@@ -1,6 +1,7 @@
 Express-Liquid [![Build Status](https://secure.travis-ci.org/leizongmin/express-liquid.png?branch=master)](http://travis-ci.org/leizongmin/express-liquid) [![Dependencies Status](https://david-dm.org/leizongmin/express-liquid.png)](http://david-dm.org/leizongmin/express-liquid)
 ==============
 
+![express-liquid](https://nodei.co/npm/express-liquid.png)
 
 Install
 =======
@@ -13,7 +14,7 @@ npm install express-liquid
 Using TinyLiquid in Express 3.x
 ===============================
 
-1.Setting template engine
+## 1. Initialization
 
 ```javascript
 var expressLiquid = require('express-liquid');
@@ -33,13 +34,13 @@ app.engine('liquid', expressLiquid(options));
 
 More about **TinyLiquid**, see https://github.com/leizongmin/tinyliquid
 
-2.Render template
+## 2. Render a template
 
 ```javascript
 res.render('template_name', {context: context});
 ```
 
-3.About **include** tag: {% include %}
+## 3. About the **include** tag: {% include %}
 
 The root directory is **views**, for example: {% include "abc/efg" %} will include the file "abc/edf" under the "views" directory
 
@@ -50,7 +51,13 @@ If your want to use a relative file path, please add the "./" or "../" prefix. F
 {% include "../path/to" %}
 ```
 
-4.Usually, you may omit template file name suffix, then it will try to add a subffix name from the configuration `view engine`
+**Usually, you may omit template file name suffix, then it will try to add a subffix name from the configuration `view engine`**
+
+## 4. Changing the default views directory
+
+```JavaScript
+app.set('views', '/path/to/views');
+```
 
 
 License

@@ -1,7 +1,7 @@
 {
   "name":           "express-liquid",
   "main":           "./lib/index.js",
-  "version":        "0.2.4",
+  "version":        "0.2.5",
   "description":    "A liquid template engine for Express",
   "keywords":       ["liquid", "template"],
   "author":         "Lei Zongmin <leizongmin@gmail.com>",
@@ -13,7 +13,7 @@
     "url": "git://github.com/leizongmin/express-liquid.git"
   },
   "engines": {
-    "node":         ">= 0.4.0"
+    "node":         ">= 0.8.0"
   },
   "dependencies":	{
     "tinyliquid":   "0.2.x"

@@ -16,7 +16,7 @@
   </div>
   {% if lines.length > 0 %}
   <div style="margin: 20px 0; font-family: monospace, serif; border: 1px solid #ddd; padding: 8px 18px; background-color: #fffff8;">{% for line in lines %}
-    <span style="display:inline-block; width:100%; {% if line.highlight %}background-color:rgb(253, 194, 194); font-weight: bold;{% endif %}">{{line.text | escape | replace: ' ', '&nbsp;'}}</span>
+    <pre style="display:inline-block; width:100%; margin:0; padding:0; {% if line.highlight %}background-color:rgb(253, 194, 194); font-weight: bold;{% endif %}">{{line.text|escape}}</pre>
   {% endfor %}</div>
   {% endif %}
   <h1 style="magrin: 0;">{{error | escape}}</h1>

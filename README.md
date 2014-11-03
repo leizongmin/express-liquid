@@ -7,11 +7,11 @@ Install
 =======
 
 ```bash
-npm install express-liquid
+npm install express-liquid --save
 ```
 
 
-Using TinyLiquid in Express 3.x
+Using TinyLiquid in Express 3.x & 4.x
 ===============================
 
 ## 1. Initialization
@@ -32,6 +32,7 @@ var options = {
 };
 app.set('view engine', 'liquid');
 app.engine('liquid', expressLiquid(options));
+app.use(expressLiquid.middleware);
 ```
 
 More about **TinyLiquid**, see https://github.com/leizongmin/tinyliquid
@@ -39,7 +40,15 @@ More about **TinyLiquid**, see https://github.com/leizongmin/tinyliquid
 ## 2. Render a template
 
 ```javascript
-res.render('template_name', {context: context});
+res.render('template_name', {a: 'hello', b: 'world'});
+```
+
+or
+
+```javascript
+res.locals.a = 'hello';
+res.locals.b = 'world';
+res.render('template_name');
 ```
 
 ## 3. About the **include** tag: {% include %}

@@ -19,7 +19,7 @@
     "tinyliquid":   "0.2.x"
   },
   "devDependencies": {
-    "mocha":        "1.8.1"
+    "mocha":        "4.0.1"
   },
   "scripts": {
     "test":         "mocha -t 5000"

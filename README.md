@@ -1,6 +1,8 @@
 Express-Liquid [![Build Status](https://secure.travis-ci.org/leizongmin/express-liquid.png?branch=master)](http://travis-ci.org/leizongmin/express-liquid) [![Dependencies Status](https://david-dm.org/leizongmin/express-liquid.png)](http://david-dm.org/leizongmin/express-liquid)
 ==============
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/express-liquid.svg)](https://greenkeeper.io/)
+
 ![express-liquid](https://nodei.co/npm/express-liquid.png)
 
 Install
